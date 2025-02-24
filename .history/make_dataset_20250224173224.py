@@ -10,7 +10,7 @@ data_path = "project/data/truncate_data_combined.pkl"
 datasets = [
     "paul_graham",
     # "scientific_papers",
-    # "amazon_polarity",
+    "amazon_polarity",
     # "arguana",
     # "reddit",
 ]
