@@ -131,30 +131,31 @@ class MultiModelBinaryTrainer:
         return total_loss / len(data)
 
 
-    def train_binary_head(self, train_data, test_data, epochs, batch_size, output_dir):
-        num_batches_per_epoch = max(int(len(train_data) / batch_size + 0.99), 1)
-        total_iters = epochs * num_batches_per_epoch
-        
-        current_iter = 0
-        for epoch in range(epochs):
-            train_loss = self.train_epoch(train_data, batch_size, current_iter, total_iters)
-            current_iter += num_batches_per_epoch
-            print(f"Epoch: {epoch+1}, Train Loss: {train_loss:.4f}, Current Temp: {self.binary_head.temp:.4f}")
+    def train_binary_head(self, train_data, test_data, epochs, batch_size, output_dir="project/models/binary_head"):
+    num_batches_per_epoch = max(int(len(train_data) / batch_size + 0.99), 1)
+    total_iters = epochs * num_batches_per_epoch
+    
+    current_iter = 0
+    for epoch in range(epochs):
+        train_loss = self.train_epoch(train_data, batch_size, current_iter, total_iters)
+        current_iter += num_batches_per_epoch
+        print(f"Epoch: {epoch+1}, Train Loss: {train_loss:.4f}, Current Temp: {self.binary_head.temp:.4f}")
 
-        print("Saving model...")
-        self.binary_head.save_model(output_dir)
+    # 保存训练好的模型
+    print("Saving model...")
+    self.binary_head.save_model(output_dir)
+    
+    # 重新加载模型进行评估
+    print("Reloading model for evaluation...")
+    self.binary_head = BinaryHead.load_model(
+        f"{output_dir}/binary_head_full.pt",
+        self.device
+    )
+    
+    test_loss = self.eval_epoch(test_data, batch_size)
+    print(f"Test Loss: {test_loss:.4f}")
 
-        print("Reloading model for evaluation...")
-        self.binary_head = BinaryHead.load_model(
-            f"{output_dir}/binary_head_full.pt",
-            self.device
-        )
-        self.binary_head.training = False
-        
-        test_loss = self.eval_epoch(test_data, batch_size)
-        print(f"Test Loss: {test_loss:.4f}")
-
-        return self.binary_head
+    return self.binary_head
 
 
 def train(

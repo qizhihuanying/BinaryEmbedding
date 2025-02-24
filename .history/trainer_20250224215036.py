@@ -143,13 +143,13 @@ class MultiModelBinaryTrainer:
 
         print("Saving model...")
         self.binary_head.save_model(output_dir)
-
+        
+        # 重新加载模型进行评估
         print("Reloading model for evaluation...")
         self.binary_head = BinaryHead.load_model(
             f"{output_dir}/binary_head_full.pt",
             self.device
         )
-        self.binary_head.training = False
         
         test_loss = self.eval_epoch(test_data, batch_size)
         print(f"Test Loss: {test_loss:.4f}")

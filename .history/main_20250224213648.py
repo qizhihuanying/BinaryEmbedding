@@ -84,8 +84,7 @@ def main():
         lr=args.lr,
         batch_size=args.batch_size,
         temp=args.temp,
-        num_trainable_layers=args.base_trainable_layers,
-        output_dir=args.output_dir
+        num_trainable_layers=args.base_trainable_layers
     )
 
     binary_head.save_model(args.output_dir)

@@ -42,6 +42,7 @@ class BinaryHead(nn.Module):
             x = torch.sigmoid(x / self.temp)
         else:
             x = (x > 0).float()
+        
         return x
     
     def save_model(self, output_dir):

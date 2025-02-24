@@ -131,7 +131,7 @@ class MultiModelBinaryTrainer:
         return total_loss / len(data)
 
 
-    def train_binary_head(self, train_data, test_data, epochs, batch_size, output_dir):
+    def train_binary_head(self, train_data, test_data, epochs, batch_size):
         num_batches_per_epoch = max(int(len(train_data) / batch_size + 0.99), 1)
         total_iters = epochs * num_batches_per_epoch
         
@@ -141,14 +141,6 @@ class MultiModelBinaryTrainer:
             current_iter += num_batches_per_epoch
             print(f"Epoch: {epoch+1}, Train Loss: {train_loss:.4f}, Current Temp: {self.binary_head.temp:.4f}")
 
-        print("Saving model...")
-        self.binary_head.save_model(output_dir)
-
-        print("Reloading model for evaluation...")
-        self.binary_head = BinaryHead.load_model(
-            f"{output_dir}/binary_head_full.pt",
-            self.device
-        )
         self.binary_head.training = False
         
         test_loss = self.eval_epoch(test_data, batch_size)
@@ -184,6 +176,6 @@ def train(
         train_data=train_data,
         test_data=test_data,
         epochs=epochs,
-        batch_size=batch_size,
+        batch_size=batch_size
         output_dir=output_dir
     )

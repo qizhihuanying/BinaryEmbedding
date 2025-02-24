@@ -13,7 +13,7 @@ from trainer import train
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train binary encoder")
-    parser.add_argument("--local_model_names", type=str, nargs="+", default=["BAAI/bge-m3"], help="List of local model names")
+    parser.add_argument("--local_model_names", type=str, nargs="+", default=["BAAI/bge-m3", "BAAI/bge-small-en", "google-bert/bert-base-uncased"], help="List of local model names")
     parser.add_argument("--api_model_names", type=str, nargs="+", default=[], help="List of API model names")
     parser.add_argument("--output_dir", type=str, default="project/models/binary_head", help="Output directory for models")
     parser.add_argument("--epochs", type=int, default=3, help="Number of training epochs")
@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument("--batch_size", type=int, default=1, help="Batch size")
     parser.add_argument("--temp", type=float, default=1.0, help="Temperature parameter")
     parser.add_argument("--test_ratio", type=float, default=0.2, help="Test set ratio")
-    parser.add_argument("--base_trainable_layers", type=int, default=0, help="Number of trainable layers in base model")
+    parser.add_argument("--num_trainable_layers", type=int, default=0, help="Number of trainable layers in base model")
     
     return parser.parse_args()
 
@@ -84,8 +84,7 @@ def main():
         lr=args.lr,
         batch_size=args.batch_size,
         temp=args.temp,
-        num_trainable_layers=args.base_trainable_layers,
-        output_dir=args.output_dir
+        num_trainable_layers=args.num_trainable_layers
     )
 
     binary_head.save_model(args.output_dir)

@@ -42,6 +42,7 @@ class BinaryHead(nn.Module):
             x = torch.sigmoid(x / self.temp)
         else:
             x = (x > 0).float()
+        
         return x
     
     def save_model(self, output_dir):
@@ -57,7 +58,8 @@ class BinaryHead(nn.Module):
             'supported_dims': [str(k) for k in self.dim_unifiers.keys()] 
         }
         torch.save(state, model_path)
-
+        
+        # 保存配置信息
         config = {
             "unified_dim": self.unified_dim,
             "output_dim": self.output_dim,

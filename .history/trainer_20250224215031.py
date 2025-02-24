@@ -141,15 +141,16 @@ class MultiModelBinaryTrainer:
             current_iter += num_batches_per_epoch
             print(f"Epoch: {epoch+1}, Train Loss: {train_loss:.4f}, Current Temp: {self.binary_head.temp:.4f}")
 
+        # 保存训练好的模型
         print("Saving model...")
         self.binary_head.save_model(output_dir)
-
+        
+        # 重新加载模型进行评估
         print("Reloading model for evaluation...")
         self.binary_head = BinaryHead.load_model(
             f"{output_dir}/binary_head_full.pt",
             self.device
         )
-        self.binary_head.training = False
         
         test_loss = self.eval_epoch(test_data, batch_size)
         print(f"Test Loss: {test_loss:.4f}")

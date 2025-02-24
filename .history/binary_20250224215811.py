@@ -42,12 +42,14 @@ class BinaryHead(nn.Module):
             x = torch.sigmoid(x / self.temp)
         else:
             x = (x > 0).float()
+        
         return x
     
     def save_model(self, output_dir):
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
         
+        # 保存模型状态
         model_path = output_path / "binary_head_full.pt"
         state = {
             'unified_dim': self.unified_dim,
@@ -57,7 +59,8 @@ class BinaryHead(nn.Module):
             'supported_dims': [str(k) for k in self.dim_unifiers.keys()] 
         }
         torch.save(state, model_path)
-
+        
+        # 保存配置信息
         config = {
             "unified_dim": self.unified_dim,
             "output_dim": self.output_dim,
@@ -87,7 +90,7 @@ class BinaryHead(nn.Module):
             
             # 加载维度统一层和二值投影层的权重
             for dim_key, unifier_state in state['dim_unifiers'].items():
-                input_dim = int(float(dim_key))
+                input_dim = int(float(dim_key))  # 将字符串键转换回数字
                 unifier = model.get_dim_unifier(input_dim)
                 unifier.load_state_dict(unifier_state)
             model.binary_projector.load_state_dict(state['binary_projector'])

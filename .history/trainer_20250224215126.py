@@ -149,7 +149,7 @@ class MultiModelBinaryTrainer:
             f"{output_dir}/binary_head_full.pt",
             self.device
         )
-        self.binary_head.training = False
+        self.bin
         
         test_loss = self.eval_epoch(test_data, batch_size)
         print(f"Test Loss: {test_loss:.4f}")
